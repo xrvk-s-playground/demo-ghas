@@ -1,0 +1,14 @@
+name: "My CodeQL config"
+
+disable-default-queries: false
+
+#queries:
+#  - uses: security-extended. # Queries of lower severity and precision than the default queries
+#  - uses: security-and-quality # Queries from security-extended, plus maintainability and reliability queries
+
+paths-ignore:  # excludes scans from the node_modules directory (relative to root), as well as any files that end in .test.js
+  - node_modules
+  - '**/*.test.js'
+  
+paths:    #scans files in the src directory
+  - src 
