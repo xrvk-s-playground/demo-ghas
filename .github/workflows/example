@@ -1,0 +1,44 @@
+name: "CodeQL analysis"
+
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  codeql:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest] # macos is not yet supported
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      # with:
+      #   submodules: recursive # omit this if your repository doesn't use submodules
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          config-file: ./.github/codeql/codeql-config.yml
+      - name: Run manual build command
+        run: |
+          mvn clean
+          mvn compile -DskipTests
+      - name: Run CodeQL analysis
+        uses: github/codeql-action/analyze@v1
+      - name: Upload SARIF results as artifacts
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: sarif-results
+          path: /home/runner/work/<repository>/results/
+      - name: Upload CodeQL database
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: struts-java-db
+          # path: ${{ env.RUNNER_TEMP }}/codeql_databases/java # alternative
+          path: ${{ env.CODEQL_ACTION_DATABASE_DIR }}/java
