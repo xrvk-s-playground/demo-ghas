@@ -9,7 +9,7 @@ jobs:
   codeql:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest] # macos is not yet supported
+        os: [ubuntu-latest, windows-latest]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
